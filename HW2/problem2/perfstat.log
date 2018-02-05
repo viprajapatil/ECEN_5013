@@ -1,0 +1,21 @@
+APES Homework 2 
+File permissions change successful 
+Write successful 
+File is successfully closed 
+Write successful 
+Read successful = P 
+./problem2.o: Aborted
+
+ Performance counter stats for './problem2.o':
+
+          0.944718      task-clock:u (msec)       #    0.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+                57      page-faults:u             #    0.060 M/sec                  
+   <not supported>      cycles:u                                                    
+   <not supported>      instructions:u                                              
+   <not supported>      branches:u                                                  
+   <not supported>      branch-misses:u                                             
+
+       2.439095113 seconds time elapsed
+

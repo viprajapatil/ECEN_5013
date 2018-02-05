@@ -1,0 +1,32 @@
+__libc_start_main(0x400916, 1, 0x7ffedc664508, 0x400b90 <unfinished ...>
+puts("APES Homework 2 ")                         = 17
+chmod("example.txt", 0777)                       = 0
+puts("File permissions change not succ"...)      = 40
+fopen("example.txt", "w")                        = 0xf0a020
+fwrite("\240\f@", 1, 8, 0xf0a020)                = 8
+puts("Write successful ")                        = 18
+fclose(0xf0a020)                                 = 0
+puts("File is successfully closed ")             = 29
+fopen("example.txt", "a")                        = 0xf0a020
+malloc(800)                                      = 0xf0a250
+fopen("example.txt", "r")                        = 0xf0a580
+__isoc99_scanf(0x400d3c, 0xf0a250, 0, 0x7fa47c5cd040) = 1
+fgets("\240\f@", 100, 0xf0a580)                  = 0xf0a250
+fwrite("\240\f@", 1, 8, 0xf0a580)                = 0
+puts("Write successful ")                        = 18
+fflush(0xf0a580)                                 = 0
+fclose(0xf0a580)                                 = 0
+fopen("example.txt", "r")                        = 0xf0a580
+_IO_getc(0xf0a580)                               = '\240'
+printf("Read successful = %c \n", '\240')        = 21
+gets(0x7ffedc6643f0, 100, 0xf0a580, 0x7fffffec)  = 0x7ffedc6643f0
+fclose(0xf0a580)                                 = 0
+free(0xf0a580APES Homework 2 
+File permissions change not successful 
+Write successful 
+File is successfully closed 
+Write successful 
+Read successful =   
+ <no return ...>
+--- SIGABRT (Aborted) ---
++++ killed by SIGABRT +++

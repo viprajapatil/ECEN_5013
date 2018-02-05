@@ -1,0 +1,28 @@
+APES Homework 2 
+File permissions change successful 
+Write successful 
+File is successfully closed 
+Write successful 
+Read successful = P 
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+  0.00    0.000000           0        11           read
+  0.00    0.000000           0         7           write
+  0.00    0.000000           0        10           open
+  0.00    0.000000           0         8           close
+  0.00    0.000000           0         9           fstat
+  0.00    0.000000           0         1           lseek
+  0.00    0.000000           0        12           mmap
+  0.00    0.000000           0         6           mprotect
+  0.00    0.000000           0         4           munmap
+  0.00    0.000000           0         3           brk
+  0.00    0.000000           0         1           rt_sigprocmask
+  0.00    0.000000           0         7           writev
+  0.00    0.000000           0         4         4 access
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           chmod
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         1           gettid
+  0.00    0.000000           0         1           tgkill
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000000                    88         4 total
