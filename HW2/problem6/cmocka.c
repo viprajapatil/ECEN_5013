@@ -41,11 +41,26 @@ void test_delete_from_end(void **state)
   head = insert_at_beginning(head,3);
   head = insert_at_beginning(head,1);
   head = delete_from_end(head);
-  uint32_t status = head->data;
   assert_int_equal(3,peak(head,2));
 }
 
+void test_delete_from_position(void **state)
+{ struct info* head = (struct info*)malloc(sizeof(struct info));
+  head = insert_at_beginning(head,2);
+  head = insert_at_beginning(head,1);
+  head = insert_at_beginning(head,3);
+  head = delete_from_position(head,2);
+  assert_int_equal(2,peak(head,2));
+}
 
+void test_size(void **state)
+{ struct info* head = (struct info*)malloc(sizeof(struct info));
+  head = insert_at_beginning(head,2);
+  head = insert_at_beginning(head,1);
+  head = insert_at_beginning(head,3);
+  int s = size(head);
+  assert_int_equal(3,s);
+}
 
 int main(int argc, char **argv)
 {
@@ -55,7 +70,9 @@ int main(int argc, char **argv)
   cmocka_unit_test(test_insert_at_position),
   cmocka_unit_test(test_delete_from_beginning),
   cmocka_unit_test(test_delete_from_end),
-  
+  cmocka_unit_test(test_delete_from_position),
+  cmocka_unit_test(test_size),
+ 
   };
   return cmocka_run_group_tests(tests, NULL, NULL);
 }
