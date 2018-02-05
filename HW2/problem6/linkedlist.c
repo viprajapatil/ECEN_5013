@@ -216,6 +216,17 @@ int size(struct info* head)
 	return link_size;
 }
 
+uint32_t peak(struct info* head, int index)
+{
+    int i = 1;
+	while (i < index)
+		{
+			head = head->obj.next;
+			i++;
+		}
+	return head->data;
+}
+
 void display(struct info* head)
 {
 	
