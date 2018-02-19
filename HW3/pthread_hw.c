@@ -319,9 +319,7 @@ printf("\n");
     log_print(file_log,getppid(),getpid(),syscall(SYS_gettid),"Thread 2 executing","","");
 
     memset(&sig_act, 0, sizeof(sig_act));
-	
     sig_act.sa_handler = &signal_handler;
-	
     sigaction(SIGVTALRM, &sig_act, NULL);
     sigaction(SIGUSR1, &sig_act, NULL);
     sigaction(SIGUSR2, &sig_act, NULL);
