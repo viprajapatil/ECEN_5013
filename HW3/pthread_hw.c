@@ -9,17 +9,11 @@
  */
 
 #include <pthread.h>
-
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <time.h>
-
 #include <signal.h>
-
 #include <string.h>
-
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/syscall.h>
@@ -35,10 +29,8 @@ struct thread_info {
 
 };
 
-#define log_init(file) FILE *flog = fopen(file,"a");
-#define log_ptr (flog)
 FILE *file_log;
-
+FILE *file_log2;
 //initialize mutex
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -105,38 +97,36 @@ struct info* insert_at_end(struct info *head, char userdata)
 
 }
 
-void log_print(FILE *fptr,int parent_id, int pthread_id, int thread_id, char* s, char* a, char* b)
+void log_print(FILE *fptr_,int parent_id, int pthread_id, int thread_id, char* s, char* a, char* b)
 {
-	fptr = fopen("hw3_log.log","a");
+
+	FILE *fptr = fopen("hw3_log.log","a");
 	time_t currenttime;
 	time(&currenttime);
 	fprintf(fptr,"Parent ID:%ld, Posix thread ID:%ld, Linux Thread ID:%ld, ",parent_id, pthread_id, thread_id);
 	fprintf(fptr,"%s ",s);
-	fprintf(fptr,"%s %s\n",a,b)
-	fprintf(fptr,"Time: %s",ctime(&currenttime));
+	fprintf(fptr,"%s %s\n",a,b);
+	//char *timeStr = ctime(&currenttime);
+	//fprintf(fptr,"Time: %s",timeStr);
+fflush(fptr);
 	fclose(fptr);
 }
+
+
 
 void check_char(struct info *head)
 
 {
 
     struct info* temp = (struct info*)malloc(sizeof(struct info));
-
     struct info* temp1 = (struct info*)malloc(sizeof(struct info));
-
     struct info* temp2 = (struct info*)malloc(sizeof(struct info));
 
     temp2 = head;
-
     int count = 0;
-
     int i = 0;
-
     char c,d,e,f;
-
     char arr[10];
-
     int flag;
 
     printf("The characters which occur 3 times are");
@@ -200,12 +190,10 @@ void check_char(struct info *head)
                     if(flag == 0)
 
                     {
-
                     printf("%c", head -> data);
                     arr[i] = head -> data;
 
                     i++;
-
                     }
 
                     flag = 0;
@@ -245,6 +233,10 @@ void* thread1_function(void *arg)
 
     f = fopen("Valentinesday.txt", "r");
 
+    if(f == NULL)
+{
+	printf("File open error");
+}
     while (!feof(f))
 
     {
@@ -262,7 +254,8 @@ void* thread1_function(void *arg)
     //pthread_mutex_lock(&mutex);
 
     //pthread_mutex_unlock(&mutex);
-
+	
+	fclose(f);
     
     log_print(file_log,getppid(),getpid(),syscall(SYS_gettid),"Thread 1 exiting","","");
     pthread_exit(NULL);
@@ -274,7 +267,7 @@ void* thread1_function(void *arg)
 void signal_handler(int sig)
 
 {
-	FILE *cpu = fopen("logcpu.log","a");
+	
         printf("\n");
 	if(sig == SIGUSR1 || sig == SIGUSR2)
 	{
@@ -290,12 +283,16 @@ void signal_handler(int sig)
 		{
         		while(!feof(cptr))
         		{    
+			file_log = fopen("hw3_log.log","a");
             		char temp = fgetc(cptr);
             		printf("%c", temp);
-			fprintf(cpu,"%c",temp);
+			fprintf(file_log,"%c",temp);
+			fclose(file_log);
         		}
+			fclose(cptr);
 		}
-	}fclose(cpu);
+	
+	}
 
 }
 
@@ -363,7 +360,7 @@ int main()
 	log_print(file_log,getppid(),getpid(),syscall(SYS_gettid),"Child Thread 1 creation failed","","");
     }   
 
-
+	pthread_join(thread_first, NULL);
 
     if(pthread_create (&thread_second, NULL, thread2_function, (void*)thread2))
     {
@@ -372,6 +369,6 @@ int main()
     }
 
    
-    pthread_join(thread_first, NULL);
+    
     pthread_join(thread_second, NULL);
 }
