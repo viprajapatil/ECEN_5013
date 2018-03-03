@@ -1,0 +1,12 @@
+User name                   : vipraja
+Host name                   : vipraja-VirtualBox
+Operating system            : GNU/Linux
+OS Distribution             : Distributor ID:	Ubuntu
+Kernel version              : 4.14.13
+Kernel gcc version build    : Linux version 4.14.13 (vipraja@vipraja-VirtualBox) (gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.5)) #1 SMP Mon Jan 22 19:26:53 MST 2018
+Kernel build time           : #1 SMP Mon Jan 22 19:26:53 MST 2018
+System architecture info    : x86_64
+File system memory          :              
+              total        used        free      shared  buff/cache   available
+Mem:           1990         650         596           6         743        1165
+Swap:          2045           0        2045
