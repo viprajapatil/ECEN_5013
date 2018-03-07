@@ -63,7 +63,7 @@ int main()
         mesg_struct.string_length = strlen(mesg_struct.string);
         mesg_struct.USR_Led_Control = 1;
 
-	memcpy((char*)mptr, ptr, size);
+	memcpy(mptr, &mesg_struct, size);
 	
 	sem_post(sem);
 
