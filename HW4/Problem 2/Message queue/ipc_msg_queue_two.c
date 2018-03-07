@@ -50,15 +50,15 @@ int main()
 		printf("ERROR mq_send\n");
 	else printf("Process 1: message sent\n");
 	//receive a message from a message queue
-	char *payload_cptr;
-    	message payloadRecv = {0};
-    	payload_cptr = (char*)&payloadRecv;
+	char *buffrec;
+    	message buffer = {0};
+    	buffrec = (char*)&buffer;
 	
-	if (mq_receive (server, payload_cptr, sizeof(mesg_struct), 0) < 0)
+	if (mq_receive (server, buffrec, sizeof(mesg_struct), 0) < 0)
 		printf("ERROR mq_receive\n");
 	else printf ("Process 1: message received.\n");
 	
-	ptr = (message*)(payload_cptr);
+	ptr = (message*)(buffrec);
     printf("Process1 Received string: %s, String length = %d, USR led status: %d\n", ptr->string, ptr->string_length, ptr->USR_Led_Control);
 	
 	
