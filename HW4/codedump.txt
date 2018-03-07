@@ -1,3 +1,7 @@
+HW4
+
+/////////////IPC PIPE////////////////////
+
 #include<stdlib.h>
 #include<unistd.h>
 #include<stdio.h>
@@ -97,6 +101,8 @@ flag = 1;
     }    
 }
 
+/////////////IPC Shared memory////////////////////
+
 #include<stdlib.h>
 #include<unistd.h>
 #include<stdio.h>
@@ -180,6 +186,7 @@ int main()
 }
 
 
+/////////////Kernel module Process tree////////////////////
 
 #include <linux/init.h>
 #include <linux/module.h>
@@ -228,6 +235,9 @@ static void __exit my_module_exit(void)
 
 module_init(my_module_init);
 module_exit(my_module_exit);
+
+/////////////Kernel module Kthread Problem 4////////////////////
+
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/moduleparam.h>
@@ -311,6 +321,9 @@ static void __exit my_module_exit(void)
 
 module_init(my_module_init);
 module_exit(my_module_exit);
+
+/////////////Kernel module Process tree////////////////////
+
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/moduleparam.h>
@@ -358,102 +371,8 @@ static void __exit my_module_exit(void)
 
 module_init(my_module_init);
 module_exit(my_module_exit);
-#include <linux/init.h>
-#include <linux/module.h>
-#include <linux/moduleparam.h>
-#include <linux/errno.h>
-#include <linux/sched.h>
-#include <linux/pid.h>
 
-
-#define getStatusString(state) ((state > 0) ? "Stopped" : ((state == 0) ? "Runnable" : ((state == -1) ? "Unrunnable" : "Unknown")))	
-
-#define getChildrenCount(child_taskStruct)		\
-({												\
-	static unsigned int child_count = 0;		\
-	struct list_head *list_itr	;				\
-	list_for_each(list_itr,child_taskStruct)	\
-	{											\
-		child_count++;							\
-	}											\
-	child_count;								\
-})
-
-
-static int process_id = -1;
-
-module_param(process_id,int,S_IRUGO | S_IWUSR);
-
-int __init gunjModule_proctree_init(void)
-{
-	struct task_struct *task;
-
-	printk(KERN_INFO "Initializing Process tree example Module. Function %s\n",__FUNCTION__);
-
-	if(-1 == process_id)
-	{
-		printk(KERN_INFO "Got no process_id as parameter. Taking current process.\n");
-		task = current;	
-	}
-	else
-	{
-		struct pid *procid_struct = find_get_pid(process_id);
-		task = pid_task(procid_struct, PIDTYPE_PID);
-	}
-
-	/*
-	Thread Name
-	Process ID
-	Process Status
-	Number of children
-	Nice value
-	*/
-    printk(KERN_INFO "Process got as parameter: %s, PID: %d, State: %s, #Children: %u, Nice: %d", task->comm, task->pid, getStatusString(task->state), getChildrenCount(&task->children),  task_nice(task));
-    do
-    {
-        task = task->parent;
-        printk(KERN_INFO "Parent process: %s, PID: %d, State: %s, #Children: %u, Nice: %d", task->comm, task->pid, getStatusString(task->state), getChildrenCount(&task->children),  task_nice(task));
-
-    }while(0 != task->pid);
-
-	return 0;
-}
-
-
-void __exit gunjModule_proctree_exit(void)
-{
-	printk(KERN_INFO "Exiting Process tree example Module. Function %s\n",__FUNCTION__);
-}
-
-
-module_init(gunjModule_proctree_init);
-module_exit(gunjModule_proctree_exit);
-
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Gunj Manseta");
-MODULE_DESCRIPTION("Module accepts a process id and it prints the details of all its fore-father processes traversing up the evolution of the current process lineage up until the big bang.");
-MODULE_ALIAS("Gunj_processtree_Module");
-#include <linux/module.h>
-#include <linux/vermagic.h>
-#include <linux/compiler.h>
-
-MODULE_INFO(vermagic, VERMAGIC_STRING);
-MODULE_INFO(name, KBUILD_MODNAME);
-
-__visible struct module __this_module
-__attribute__((section(".gnu.linkonce.this_module"))) = {
-	.name = KBUILD_MODNAME,
-	.init = init_module,
-#ifdef CONFIG_MODULE_UNLOAD
-	.exit = cleanup_module,
-#endif
-	.arch = MODULE_ARCH_INIT,
-};
-
-static const char __module_depends[]
-__used
-__attribute__((section(".modinfo"))) =
-"depends=";
+/////////////IPC Socket////////////////////
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -584,89 +503,9 @@ int main()
 	
 	return 0;
 }
-#include <linux/init.h>
-#include <linux/module.h>
-#include <linux/moduleparam.h>
-#include <linux/errno.h>
-#include <linux/sched.h>
-#include <linux/pid.h>
-#include <linux/kernel.h>
-#include <linux/timer.h>
-#include <linux/kthread.h>
-#include <linux/delay.h>
-#include <linux/kfifo.h>
 
 
 
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Vipraja Patil");
-MODULE_DESCRIPTION("Kthread api");
-
-struct task_struct *p1;
-struct task_struct *p2; 
-struct timer_list myTimer;
-#define fifoname "vpfifo"
-
-void firstthread()
-{
-	kfifo_put(fifoname,current);
-	mod_timer(&myTimer, jiffies + msecs_to_jiffies(500));
-}
-
-void secondthread()
-{
-	struct task_struct *data;
-	while(1)
-	{
-	if (kthread_should_stop())
-	break;
-
-	int ret = kfifo_get(fifoname, &data);
-	if (ret == 0)
-	{
-		printk("Kfifo empty");
-		//printf("Kfifo empty");
-	}
-	else
-	{
-		printk(KERN_LOG "Previous pid: %d, vruntime: %llu",list_prev_entry(data,tasks)->pid, list_prev_entry(data,tasks)->se.vruntime);
-		printk(KERN_LOG "Current pid: %d, vruntime: %llu",data->pid,data->vruntime);
-		printk(KERN_LOG "Next pid: %d, vruntime: %llu",list_next_entry(data,tasks)->pid, list_next_entry(data,tasks)->se.vruntime);
-	}
-
-	}
-}
-
-static int __init my_module_init(void)
-{
-    printk(KERN_INFO "my_module_init\n");
-    	INIT_KFIFO(vpfifo);
-	
-	// create kthreads
-	p1 = kthread_run(firstthread,NULL,"First thread");
-	p2 = kthread_run(secondthread, NULL, "Second thread");
-	init_timer(&myTimer);
-    myTimer.data = (unsigned long)0;
-    myTimer.expires = jiffies + msecs_to_jiffies(500);
-    myTimer.function = (void(*)(unsigned long))firstthread;
-    add_timer(&myTimer);		
-		
-	
-    return 0;
-}
-
-static void __exit my_module_exit(void)
-{
-    printk("Exiting my module\n");
-	kthread_stop(p1);
-	kthread_stop(p2);
-	del_timer(&myTimer);
-    return;
-    
-}
-
-module_init(my_module_init);
-module_exit(my_module_exit);
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -741,6 +580,8 @@ int main()
 	
 }
 
+
+/////////////IPC Message queue////////////////////
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -805,6 +646,9 @@ int main()
 	mq_unlink(SERVER_QUEUE_NAME);
 	
 }
+
+/////////////IPC Shared memory////////////////////
+
 #include<stdlib.h>
 #include<unistd.h>
 #include<stdio.h>
