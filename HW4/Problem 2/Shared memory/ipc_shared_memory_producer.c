@@ -58,7 +58,7 @@ int main()
         strcpy(mesg_struct.string, "From producer to consumer msg");
         mesg_struct.string_length = strlen(mesg_struct.string);
         mesg_struct.USR_Led_Control = 0;
-	memcpy((char*)mptr, ptr, size);
+	memcpy(mptr, &mesg_struct, size);
 
 	//unlock the semaphore
 	sem_post(sem);
@@ -79,6 +79,5 @@ int main()
     
     
 }
-
 
 
